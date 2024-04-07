@@ -1,0 +1,66 @@
+Namespaces:
+    - provide processes with their own system view
+    - enable isolation between the processes
+    - define the set of resources a process can see,manage
+    - https://blog.quarkslab.com/digging-into-linux-namespaces-part-1.html
+
+Network namespaces:
+    - man ip netns
+    - create isolated network environments
+    - each namespace has its own
+        - interfaces
+        - firewall (iptable) rules
+        - routing tables
+    - connected through veth pairs
+        - veth: virtual ethernet device
+        - act as tunnels between namespaces to create a bridge to a
+           physical network device in another namespace
+        - always created in pairs
+        - packets transmitted on one device in the pair are immediately
+           received on the other device
+
+Example:
+    - create namespace ns1
+        - has no routes
+        - no interfaces are active
+        - only lo interface exists but DOWN (complete isolation)
+    - create a veth pair "veth1" and "veth1p" to connect ns1 with the root namespace
+        - put veth1 in the root namespace
+        - put veth1p in the created namespace ns1
+        - assign veth1 an ip and bring it up
+        - assign veth1p an ip and bring it up (after entering the namespace)
+        - test connectivity between the namespaces
+        - can use tcpdump as well to analyze the traffic
+
+Commands:
+    - check namespaces for a process
+        "sudo ls /proc/[pid]/ns"
+
+    - list namespaces in the system
+        "ip netns ls"
+
+    - create a nemespace ns1
+        "sudo ip netns add ns1"
+
+    - enter nemespace ns1
+        "sudo nsenter --net=/var/run/netns/ns1 /bin/bash"
+
+    - create a veth pair
+        "sudo ip link add veth1 type veth peer name veth1p"
+
+    - connect one end of the pair to a namespace
+        "sudo ip link set veth1p netns ns1"
+
+    - turn on the veth1 interface and assign it an ip
+        "sudo ip link set veth1 up"
+        "sudo ip addr add 172.12.0.11/24 dev veth0"
+
+    - turn on the veth1p interface and assign it an ip
+        "sudo ip link set veth1p up"
+        "sudo ip addr add 172.12.0.12/24 dev veth1p"
+
+    - test connectivity from root namespace 
+        "ping 172.12.0.12"
+
+    - test connectivity from ns1 namespace 
+        "ping 172.12.0.11"

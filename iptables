@@ -1,0 +1,41 @@
+IPtables:
+    - https://www.youtube.com/watch?v=6Ra17Qpj68c
+    - https://www.youtube.com/watch?v=NAdJojxENEU
+    - Examples: https://gist.github.com/tomasinouk/eec152019311b09905cd
+    - Configure the kernel's netlifier firewall
+    - Configure NAT rules on linux
+    - Tables
+        - a table is a list of chains
+    - Chains
+        - list of rules
+        - e.g, PREROUTING, INPUT, FORWARD, OUTPUT, POSTROUTING 
+        - DANT and MASQUERADE
+        - PREROUTING is used for packets arriving from outside
+        - OUTPUT is used for packets originating from this server
+    - Targets
+        - The target/jump tells the rule what to do with a packet that is matched with the match section of the rule
+        - There are a couple of basic targets, the ACCEPT and DROP targets
+
+        - MASQUERADE (like SNAT but for dynamic ips)
+            - valid in the POSTROUTING chain
+            - used to modify the src ip address of packets
+            -  when a packet matches a rule with the MASQUERADE target, the src IP address of that packet 
+                is replaced with the IP address of the outbound interface through which the packet is leaving 
+                the network.
+            - commonly used where a network wants to share a single public IP address among multiple internal devices 
+                while hiding their individual IP addresses 
+            - uses --to-ports <port>
+            - uses --to <ip>:<port>
+
+        - DNAT
+            - valid in the PREROUTING chain
+            - used to modify the dst ip address of packets
+            - uses --to-destination <ip>:<port>
+            - Example for port mapping
+
+    - Commands
+        - Check nat table: "sudo iptables -t nat -L -n -v"
+
+    - Videos
+        - https://www.ellipsix.net/geninfo/firewall/iptables/reference.html#:~:text=An%20iptables%20rule%20specification%20consists,if%20all%20the%20conditions%20match.
+

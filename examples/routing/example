@@ -1,0 +1,26 @@
+List the network interfaces
+    "ip link show"
+
+List the ip addresses
+    "ip addr show"
+
+Create a new dummy interface eth1
+    "sudo ip link add eth1 type dummy"
+
+Add an ip to that interface 
+    "sudo ip addr add 172.20.0.1/16 dev eth1"
+
+Activate the interface
+    "sudo ip link set eth1 up"
+
+Show routing decisions for a certain ip
+    "ip route get 172.20.0.15"
+
+Listen to connections on that interface
+    "python3 -m http.server --bind 172.20.0.1 1234"
+
+Make requests
+    "curl 172.20.0.1:1234"
+
+Clean up
+     "sudo ip link delete eth1 type dummy"  # routes will be deleted automatically
