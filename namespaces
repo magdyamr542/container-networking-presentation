@@ -19,18 +19,33 @@ Network namespaces:
         - packets transmitted on one device in the pair are immediately
            received on the other device
 
-Example:
-    - create namespace ns1
-        - has no routes
+Example 1 (two processes):
+    - create namespaces ns1 and ns2
+        - have no routes
         - no interfaces are active
         - only lo interface exists but DOWN (complete isolation)
-    - create a veth pair "veth1" and "veth1p" to connect ns1 with the root namespace
-        - put veth1 in the root namespace
-        - put veth1p in the created namespace ns1
+    - create veth pairs to connect them 
+        - "veth1" and "veth1p" for ns1
+        - "veth2" and "veth2p" for ns2
+        - put veth1 in ns1
+        - put veth1p in ns2
         - assign veth1 an ip and bring it up
-        - assign veth1p an ip and bring it up (after entering the namespace)
+        - assign veth1p an ip and bring it up 
         - test connectivity between the namespaces
         - can use tcpdump as well to analyze the traffic
+
+Example 2 (two processes with a bridge):
+    - create namespaces ns1 and ns2
+    - create veth pairs (veth1,veth1p) and (veth2,veth2p)
+    - create virtual bridge br0
+    - connect veth pairs ends (veth1p,veth2p) to the bridge
+    - give components ips and bring them up
+    - test connectivity
+
+Example 3 (two containers with a network):
+    - create a docker network
+    - attach two busybox containers to it
+
 
 Commands:
     - check namespaces for a process
@@ -39,28 +54,75 @@ Commands:
     - list namespaces in the system
         "ip netns ls"
 
-    - create a nemespace ns1
+    - create nemespaces 
         "sudo ip netns add ns1"
+        "sudo ip netns add ns2"
 
-    - enter nemespace ns1
+    - enter nemespace
         "sudo nsenter --net=/var/run/netns/ns1 /bin/bash"
+        "sudo nsenter --net=/var/run/netns/ns2 /bin/bash"
 
-    - create a veth pair
-        "sudo ip link add veth1 type veth peer name veth1p"
+    - create a veth pair from ns1
+        "sudo ip link add veth1 type veth peer name veth2"
 
-    - connect one end of the pair to a namespace
-        "sudo ip link set veth1p netns ns1"
+    - connect one end of the pair to namespace 2
+        "sudo ip link set veth2 netns ns2"
 
     - turn on the veth1 interface and assign it an ip
         "sudo ip link set veth1 up"
-        "sudo ip addr add 172.12.0.11/24 dev veth0"
+        "sudo ip addr add 172.12.0.11/24 dev veth1"
+
+        "sudo ip link set veth2 up"
+        "sudo ip addr add 172.12.0.12/24 dev veth2"
 
     - turn on the veth1p interface and assign it an ip
         "sudo ip link set veth1p up"
         "sudo ip addr add 172.12.0.12/24 dev veth1p"
 
-    - test connectivity from root namespace 
+    - test connectivity from ns1
         "ping 172.12.0.12"
 
-    - test connectivity from ns1 namespace 
+    - test connectivity from ns2
         "ping 172.12.0.11"
+
+    ------------------------------
+    ------------------------------
+
+    - create a bridge
+        "sudo ip link add name br0 type bridge"
+
+    - add veth pairs to the bridge
+        "sudo ip link set dev veth1p master br0"
+        "sudo ip link set dev veth2p master br0"
+
+    - show devices connected to a bridge
+        "brctl show br0"
+
+    - assign an ip to the bridge
+        "sudo ip addr add 172.12.0.13/24 dev br0"
+
+    - turn on the bridge
+        "sudo ip link set br0 up"
+    
+    - allow the bridge to forward the packets between the namespaces
+        - "iptables -A FORWARD -i br0 -j ACCEPT"
+
+    - check the arp cache
+        - "arp"
+    - clear the arp cache
+        - "arp"
+    
+    - inspect the tcpdump from one of the interfaces
+        - to see the arp messages
+
+
+Clean up
+    - delete namespaces
+        "sudo ip netns delete ns1"
+        "sudo ip netns delete ns2"
+
+    - delete veth pair veth1 veth1
+        "sudo ip link delete veth1"
+
+    - delete the bridge
+        "sudo ip link delete br0"
