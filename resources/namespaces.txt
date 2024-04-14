@@ -126,3 +126,31 @@ Clean up
 
     - delete the bridge
         "sudo ip link delete br0"
+
+Scripts:
+    - Example 2
+    ```
+    # namespaces
+    sudo ip netns add ns1
+    sudo ip netns add ns2
+    # veth pairs
+    sudo ip link add veth1 type veth peer name veth1p
+    sudo ip link add veth2 type veth peer name veth2p
+    # connect pairs to namespaces
+    sudo ip link set veth1 netns ns1
+    sudo ip link set veth2 netns ns2
+    # bridge
+    sudo ip link add name br0 type bridge
+    # connect pairs to bridge
+    sudo ip link set dev veth1p master br0
+    sudo ip link set dev veth2p master br0
+    # bring bridge up
+    sudo ip addr add 172.12.0.13/24 dev br0
+    sudo ip link set br0 up
+    # configure veth1 in ns1 
+    sudo ip netns exec ns1 ip addr add 172.12.0.11/24 dev veth1
+    sudo ip netns exec ns1 ip link set veth1 up
+    # configure veth2 in ns2 
+    sudo ip netns exec ns2 ip link set veth2 up
+    sudo ip netns exec ns2 ip addr add 172.12.0.12/24 dev veth1
+    ```

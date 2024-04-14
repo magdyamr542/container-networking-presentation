@@ -1,0 +1,6 @@
+Network interfaces:
+    - Software to control the networking hardware
+    - eth0 to control an ethernet device
+    - wlan0 is the wireless interface
+    - lo is the loopback interface (virtual interface, not backed by a hardware device)
+    - Create an interface and bring it up "ifconfig eth0 192.168.2.1 netmask 255.255.255.0 up"

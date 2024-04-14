@@ -1,3 +1,10 @@
+Routing:
+    - The dummy interface https://tldp.org/LDP/nag/node72.html
+    - Routing tables and routing decisions 
+    - routing tables decide how traffic is routed
+    - used for packet forwarding
+    - use "ip route"
+
 List the network interfaces
     "ip link show"
 

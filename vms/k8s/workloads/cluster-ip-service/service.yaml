@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment-cluster-ip
+  labels:
+    app: nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx-pod-cluster-ip
+  template:
+    metadata:
+      labels:
+        app: nginx-pod-cluster-ip
+    spec:
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app: nginx-pod-cluster-ip
+      containers:
+        - name: nginx
+          image: nginx:1.14.2
+          ports:
+            - containerPort: 80
+
+---
+# ClusterIP service
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service-cluster-ip
+spec:
+  selector:
+    app: nginx-pod-cluster-ip
+  ports:
+    - protocol: TCP
+      name: nginx-service-cluster-ip-port
+      port: 80
+      targetPort: 80

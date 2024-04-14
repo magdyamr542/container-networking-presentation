@@ -1,0 +1,10 @@
+{
+  "files.associations": {
+    "iptables": "plaintext",
+    "namespaces": "plaintext",
+    "dns-resolution": "plaintext",
+    "port-forwarding": "plaintext",
+    "routing": "plaintext"
+  },
+  "cSpell.words": ["PREROUTING"]
+}

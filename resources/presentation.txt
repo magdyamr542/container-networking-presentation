@@ -1,0 +1,44 @@
+Videos:
+    - container networking https://www.youtube.com/watch?v=6v_BDHIgOY8
+        - namespace
+            - different networking stack
+            - different interfaces, ip tables rules, ip routing rules
+            - check with ifconfig
+
+        - prepare examples
+            - 1 node, 1 namespae, connect between root ns and created ns
+            - 1 node, 2 namespaes, connect between both nss using a virtual bridge
+            - 2 nodes, in the same L2 network
+
+    - k8s networking https://www.youtube.com/watch?v=eAk96_MOICY
+    - k8s service networking https://www.youtube.com/watch?v=NFApeJRXos4&t=183s
+    - k8s networking https://www.youtube.com/watch?v=cUGXu2tiZMc&t=1628s
+    - k8s networking https://www.youtube.com/watch?v=tq9ng_Nz9j8
+
+
+Templates:
+    - https://www.slideshare.net/ssuser0cc9131/kubernetes-pptpptx
+    - https://www.slideshare.net/slideshow/docker-networking-overview/77539001
+    - https://www.slideteam.net/kubernetes-docker-container-implementation-ppt-powerpoint-presentation-slide-templates.html
+
+
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+
+Presentation structure:
+    1. General networking
+        - Network interfaces (./network-interfaces.txt)
+        - Routing tables (./routing.txt)
+        - Iptables (./iptables.txt)
+        - Namespaces (./namespaces.txt)
+    2. Container networking
+        - Show port forwarding
+        - Show dns resolution
+        - Show networking using a bridge
+    3. K8s networking (./k8s.txt)
+        - Show how pods connect to each other in the same node
+        - Show how pods connect to each other in different nodes
+        - Show service type cluster ip
+        - Show service type node port

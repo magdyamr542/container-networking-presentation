@@ -1,0 +1,11 @@
+xrandr --output HDMI-0 --mode 1920x1080
+
+- xrand --listmonitors
+Monitors: 1
+ 0: +*eDP-1 1920/344x1080/194+0+0  eDP-1
+
+- Mirror the output of eDP-1 to HDMI-1
+    xrandr --output eDP-1 --auto --output HDMI-1 --same-as eDP-1
+
+- Mirror with different resolutions
+     xrandr --output VGA-1 --mode 1920x1080 --scale 1x1 --output LVDS-1 --mode 1366x768 --scale 1x1 --same-as eDP-1

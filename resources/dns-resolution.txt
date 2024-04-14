@@ -1,0 +1,2 @@
+DNS resolution in docker:
+	- docker uses its own dns resolver
