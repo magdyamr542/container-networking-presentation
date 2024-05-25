@@ -1,4 +1,6 @@
-xrandr --output HDMI-0 --mode 1920x1080
+xrandr --output HDMI-1 --same-as eDP-1
+
+Use arandr and put the screens on top of each other.
 
 - xrand --listmonitors
 Monitors: 1
