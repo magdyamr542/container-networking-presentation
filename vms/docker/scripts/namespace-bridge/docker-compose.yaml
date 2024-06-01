@@ -1,7 +1,0 @@
-services:
-  backend:
-    build: .
-    ports:
-      - "8000:5000"
-  postgres:
-    image: "postgres:13.15"

@@ -6,5 +6,7 @@
     "port-forwarding": "plaintext",
     "routing": "plaintext"
   },
-  "cSpell.words": ["PREROUTING"]
+  "yaml.validate": false,
+  "yaml.schemaStore.enable": false,
+  "yaml.schemaStore.url": ""
 }

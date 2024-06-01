@@ -1,0 +1,187 @@
+
+Chain PREROUTING (policy ACCEPT)
+target           prot    opt    source     destination    extra
+---------------  ------  -----  ---------  -------------  --------------------------------
+cali-PREROUTING  all     --     0.0.0.0/0  0.0.0.0/0      /* cali:6gwbT8clXdHdC1b1 */
+KUBE-SERVICES    all     --     0.0.0.0/0  0.0.0.0/0      /* kubernetes service portals */
+
+Chain INPUT (policy ACCEPT)
+target    prot    opt    source    destination    extra
+--------  ------  -----  --------  -------------  -------
+
+Chain OUTPUT (policy ACCEPT)
+target         prot    opt    source     destination    extra
+-------------  ------  -----  ---------  -------------  --------------------------------
+cali-OUTPUT    all     --     0.0.0.0/0  0.0.0.0/0      /* cali:tVnHkvAo15HuiPy0 */
+KUBE-SERVICES  all     --     0.0.0.0/0  0.0.0.0/0      /* kubernetes service portals */
+
+Chain POSTROUTING (policy ACCEPT)
+target            prot    opt    source     destination    extra
+----------------  ------  -----  ---------  -------------  ----------------------------------
+cali-POSTROUTING  all     --     0.0.0.0/0  0.0.0.0/0      /* cali:O3lYWMrLQYEMJtB5 */
+KUBE-POSTROUTING  all     --     0.0.0.0/0  0.0.0.0/0      /* kubernetes postrouting rules */
+
+Chain KUBE-KUBELET-CANARY (0 references)
+target    prot    opt    source    destination    extra
+--------  ------  -----  --------  -------------  -------
+
+Chain KUBE-MARK-MASQ (16 references)
+target    prot    opt    source     destination    extra
+--------  ------  -----  ---------  -------------  --------------
+MARK      all     --     0.0.0.0/0  0.0.0.0/0      MARK or 0x4000
+
+Chain KUBE-NODEPORTS (1 references)
+target    prot    opt    source    destination    extra
+--------  ------  -----  --------  -------------  -------
+
+Chain KUBE-POSTROUTING (1 references)
+target      prot    opt    source     destination    extra
+----------  ------  -----  ---------  -------------  ------------------------------------------------------------
+RETURN      all     --     0.0.0.0/0  0.0.0.0/0      mark match ! 0x4000/0x4000
+MARK        all     --     0.0.0.0/0  0.0.0.0/0      MARK xor 0x4000
+MASQUERADE  all     --     0.0.0.0/0  0.0.0.0/0      /* kubernetes service traffic requiring SNAT */ random-fully
+
+Chain KUBE-PROXY-CANARY (0 references)
+target    prot    opt    source    destination    extra
+--------  ------  -----  --------  -------------  -------
+
+Chain KUBE-SEP-2GFESPSWZI6F32XN (1 references)
+target          prot    opt    source     destination    extra
+--------------  ------  -----  ---------  -------------  ----------------------------------------------------
+KUBE-MARK-MASQ  all     --     10.0.0.10  0.0.0.0/0      /* default/kubernetes:https */
+DNAT            tcp     --     0.0.0.0/0  0.0.0.0/0      /* default/kubernetes:https */ tcp to:10.0.0.10:6443
+
+Chain KUBE-SEP-5S6DQS5MNC7PHNUB (1 references)
+target          prot    opt    source        destination    extra
+--------------  ------  -----  ------------  -------------  ---------------------------------------------------------
+KUBE-MARK-MASQ  all     --     172.16.49.87  0.0.0.0/0      /* kube-system/kube-dns:dns-tcp */
+DNAT            tcp     --     0.0.0.0/0     0.0.0.0/0      /* kube-system/kube-dns:dns-tcp */ tcp to:172.16.49.87:53
+
+Chain KUBE-SEP-DHBOARJWKMTOYUKY (1 references)
+target          prot    opt    source     destination    extra
+--------------  ------  -----  ---------  -------------  ------------------------------------------------------------
+KUBE-MARK-MASQ  all     --     10.0.0.10  0.0.0.0/0      /* kube-system/metrics-server:https */
+DNAT            tcp     --     0.0.0.0/0  0.0.0.0/0      /* kube-system/metrics-server:https */ tcp to:10.0.0.10:4443
+
+Chain KUBE-SEP-HCF4TTN3LN4W737E (1 references)
+target          prot    opt    source        destination    extra
+--------------  ------  -----  ------------  -------------  -----------------------------------------------------
+KUBE-MARK-MASQ  all     --     172.16.49.82  0.0.0.0/0      /* kube-system/kube-dns:dns */
+DNAT            udp     --     0.0.0.0/0     0.0.0.0/0      /* kube-system/kube-dns:dns */ udp to:172.16.49.82:53
+
+Chain KUBE-SEP-KOLOWNIEN7UC35OC (1 references)
+target          prot    opt    source        destination    extra
+--------------  ------  -----  ------------  -------------  -----------------------------------------------------------
+KUBE-MARK-MASQ  all     --     172.16.49.87  0.0.0.0/0      /* kube-system/kube-dns:metrics */
+DNAT            tcp     --     0.0.0.0/0     0.0.0.0/0      /* kube-system/kube-dns:metrics */ tcp to:172.16.49.87:9153
+
+Chain KUBE-SEP-NF777ZAY7OOOWFSU (1 references)
+target          prot    opt    source          destination    extra
+--------------  ------  -----  --------------  -------------  ---------------------------------------------------------------------------------------------
+KUBE-MARK-MASQ  all     --     172.16.196.133  0.0.0.0/0      /* default/nginx-service-cluster-ip:nginx-service-cluster-ip-port */
+DNAT            tcp     --     0.0.0.0/0       0.0.0.0/0      /* default/nginx-service-cluster-ip:nginx-service-cluster-ip-port */ tcp to:172.16.196.133:80
+
+Chain KUBE-SEP-SJPK4DXTR5BY44GH (1 references)
+target          prot    opt    source        destination    extra
+--------------  ------  -----  ------------  -------------  -------------------------------------------------------------------------------------------
+KUBE-MARK-MASQ  all     --     172.16.49.84  0.0.0.0/0      /* default/nginx-service-cluster-ip:nginx-service-cluster-ip-port */
+DNAT            tcp     --     0.0.0.0/0     0.0.0.0/0      /* default/nginx-service-cluster-ip:nginx-service-cluster-ip-port */ tcp to:172.16.49.84:80
+
+Chain KUBE-SEP-SW3QYJSD5UTQDI3L (1 references)
+target          prot    opt    source        destination    extra
+--------------  ------  -----  ------------  -------------  ---------------------------------------------------------
+KUBE-MARK-MASQ  all     --     172.16.49.82  0.0.0.0/0      /* kube-system/kube-dns:dns-tcp */
+DNAT            tcp     --     0.0.0.0/0     0.0.0.0/0      /* kube-system/kube-dns:dns-tcp */ tcp to:172.16.49.82:53
+
+Chain KUBE-SEP-W6HJE2I2Q3CPY27L (1 references)
+target          prot    opt    source        destination    extra
+--------------  ------  -----  ------------  -------------  -----------------------------------------------------
+KUBE-MARK-MASQ  all     --     172.16.49.87  0.0.0.0/0      /* kube-system/kube-dns:dns */
+DNAT            udp     --     0.0.0.0/0     0.0.0.0/0      /* kube-system/kube-dns:dns */ udp to:172.16.49.87:53
+
+Chain KUBE-SEP-XGC4MMZ3ALJ3PBZS (1 references)
+target          prot    opt    source        destination    extra
+--------------  ------  -----  ------------  -------------  -----------------------------------------------------------
+KUBE-MARK-MASQ  all     --     172.16.49.82  0.0.0.0/0      /* kube-system/kube-dns:metrics */
+DNAT            tcp     --     0.0.0.0/0     0.0.0.0/0      /* kube-system/kube-dns:metrics */ tcp to:172.16.49.82:9153
+
+Chain KUBE-SERVICES (2 references)
+target                     prot    opt    source     destination    extra
+-------------------------  ------  -----  ---------  -------------  ----------------------------------------------------------------------------------------------------------------
+KUBE-SVC-TCOU7JCQXEZGVUNU  udp     --     0.0.0.0/0  172.17.0.10    /* kube-system/kube-dns:dns cluster IP */ udp dpt:53
+KUBE-SVC-Z4ANX4WAEWEBLCTM  tcp     --     0.0.0.0/0  172.17.4.133   /* kube-system/metrics-server:https cluster IP */ tcp dpt:443
+KUBE-SVC-K4MQKE6NTYSMEASD  tcp     --     0.0.0.0/0  172.17.48.142  /* default/nginx-service-cluster-ip:nginx-service-cluster-ip-port cluster IP */ tcp dpt:80
+KUBE-SVC-NPX46M4PTMTKRN6Y  tcp     --     0.0.0.0/0  172.17.0.1     /* default/kubernetes:https cluster IP */ tcp dpt:443
+KUBE-SVC-ERIFXISQEP7F7OF4  tcp     --     0.0.0.0/0  172.17.0.10    /* kube-system/kube-dns:dns-tcp cluster IP */ tcp dpt:53
+KUBE-SVC-JD5MR3NA4I4DYORP  tcp     --     0.0.0.0/0  172.17.0.10    /* kube-system/kube-dns:metrics cluster IP */ tcp dpt:9153
+KUBE-NODEPORTS             all     --     0.0.0.0/0  0.0.0.0/0      /* kubernetes service nodeports; NOTE: this must be the last rule in this chain */ ADDRTYPE match dst-type LOCAL
+
+Chain KUBE-SVC-ERIFXISQEP7F7OF4 (1 references)
+target                     prot    opt    source          destination    extra
+-------------------------  ------  -----  --------------  -------------  -----------------------------------------------------------------------------------------------------
+KUBE-MARK-MASQ             tcp     --     !172.16.0.0/16  172.17.0.10    /* kube-system/kube-dns:dns-tcp cluster IP */ tcp dpt:53
+KUBE-SEP-SW3QYJSD5UTQDI3L  all     --     0.0.0.0/0       0.0.0.0/0      /* kube-system/kube-dns:dns-tcp -> 172.16.49.82:53 */ statistic mode random probability 0.50000000000
+KUBE-SEP-5S6DQS5MNC7PHNUB  all     --     0.0.0.0/0       0.0.0.0/0      /* kube-system/kube-dns:dns-tcp -> 172.16.49.87:53 */
+
+Chain KUBE-SVC-JD5MR3NA4I4DYORP (1 references)
+target                     prot    opt    source          destination    extra
+-------------------------  ------  -----  --------------  -------------  -------------------------------------------------------------------------------------------------------
+KUBE-MARK-MASQ             tcp     --     !172.16.0.0/16  172.17.0.10    /* kube-system/kube-dns:metrics cluster IP */ tcp dpt:9153
+KUBE-SEP-XGC4MMZ3ALJ3PBZS  all     --     0.0.0.0/0       0.0.0.0/0      /* kube-system/kube-dns:metrics -> 172.16.49.82:9153 */ statistic mode random probability 0.50000000000
+KUBE-SEP-KOLOWNIEN7UC35OC  all     --     0.0.0.0/0       0.0.0.0/0      /* kube-system/kube-dns:metrics -> 172.16.49.87:9153 */
+
+Chain KUBE-SVC-K4MQKE6NTYSMEASD (1 references)
+target                     prot    opt    source          destination    extra
+-------------------------  ------  -----  --------------  -------------  -----------------------------------------------------------------------------------------------------------------------------------------
+KUBE-MARK-MASQ             tcp     --     !172.16.0.0/16  172.17.48.142  /* default/nginx-service-cluster-ip:nginx-service-cluster-ip-port cluster IP */ tcp dpt:80
+KUBE-SEP-NF777ZAY7OOOWFSU  all     --     0.0.0.0/0       0.0.0.0/0      /* default/nginx-service-cluster-ip:nginx-service-cluster-ip-port -> 172.16.196.133:80 */ statistic mode random probability 0.50000000000
+KUBE-SEP-SJPK4DXTR5BY44GH  all     --     0.0.0.0/0       0.0.0.0/0      /* default/nginx-service-cluster-ip:nginx-service-cluster-ip-port -> 172.16.49.84:80 */
+
+Chain KUBE-SVC-NPX46M4PTMTKRN6Y (1 references)
+target                     prot    opt    source          destination    extra
+-------------------------  ------  -----  --------------  -------------  -----------------------------------------------------
+KUBE-MARK-MASQ             tcp     --     !172.16.0.0/16  172.17.0.1     /* default/kubernetes:https cluster IP */ tcp dpt:443
+KUBE-SEP-2GFESPSWZI6F32XN  all     --     0.0.0.0/0       0.0.0.0/0      /* default/kubernetes:https -> 10.0.0.10:6443 */
+
+Chain KUBE-SVC-TCOU7JCQXEZGVUNU (1 references)
+target                     prot    opt    source          destination    extra
+-------------------------  ------  -----  --------------  -------------  -------------------------------------------------------------------------------------------------
+KUBE-MARK-MASQ             udp     --     !172.16.0.0/16  172.17.0.10    /* kube-system/kube-dns:dns cluster IP */ udp dpt:53
+KUBE-SEP-HCF4TTN3LN4W737E  all     --     0.0.0.0/0       0.0.0.0/0      /* kube-system/kube-dns:dns -> 172.16.49.82:53 */ statistic mode random probability 0.50000000000
+KUBE-SEP-W6HJE2I2Q3CPY27L  all     --     0.0.0.0/0       0.0.0.0/0      /* kube-system/kube-dns:dns -> 172.16.49.87:53 */
+
+Chain KUBE-SVC-Z4ANX4WAEWEBLCTM (1 references)
+target                     prot    opt    source          destination    extra
+-------------------------  ------  -----  --------------  -------------  -------------------------------------------------------------
+KUBE-MARK-MASQ             tcp     --     !172.16.0.0/16  172.17.4.133   /* kube-system/metrics-server:https cluster IP */ tcp dpt:443
+KUBE-SEP-DHBOARJWKMTOYUKY  all     --     0.0.0.0/0       0.0.0.0/0      /* kube-system/metrics-server:https -> 10.0.0.10:4443 */
+
+Chain cali-OUTPUT (1 references)
+target         prot    opt    source     destination    extra
+-------------  ------  -----  ---------  -------------  ---------------------------
+cali-fip-dnat  all     --     0.0.0.0/0  0.0.0.0/0      /* cali:GBTAv2p5CwevEyJm */
+
+Chain cali-POSTROUTING (1 references)
+target             prot    opt    source     destination    extra
+-----------------  ------  -----  ---------  -------------  ---------------------------------------------------------------------------------------------------------------
+cali-fip-snat      all     --     0.0.0.0/0  0.0.0.0/0      /* cali:Z-c7XtVd2Bq7s_hA */
+cali-nat-outgoing  all     --     0.0.0.0/0  0.0.0.0/0      /* cali:nYKhEzDlr11Jccal */
+MASQUERADE         all     --     0.0.0.0/0  0.0.0.0/0      /* cali:SXWvdsbh4Mw7wOln */ ADDRTYPE match src-type !LOCAL limit-out ADDRTYPE match src-type LOCAL random-fully
+
+Chain cali-PREROUTING (1 references)
+target         prot    opt    source     destination    extra
+-------------  ------  -----  ---------  -------------  ---------------------------
+cali-fip-dnat  all     --     0.0.0.0/0  0.0.0.0/0      /* cali:r6XmIziWUJsdOK6Z */
+
+Chain cali-fip-dnat (2 references)
+target    prot    opt    source    destination    extra
+--------  ------  -----  --------  -------------  -------
+
+Chain cali-fip-snat (1 references)
+target    prot    opt    source    destination    extra
+--------  ------  -----  --------  -------------  -------
+
+Chain cali-nat-outgoing (1 references)
+target      prot    opt    source     destination    extra
+----------  ------  -----  ---------  -------------  -----------------------------------------------------------------------------------------------------------------
+MASQUERADE  all     --     0.0.0.0/0  0.0.0.0/0      /* cali:flqWnvo8yq4ULQLa */ match-set cali40masq-ipam-pools src ! match-set cali40all-ipam-pools dst random-fully

@@ -30,3 +30,6 @@ sudo ip netns exec ns1 sudo ip route add default via 172.12.0.12 dev ceth0
 
 # Set the route to the namespace in the host
 sudo ip route add 172.12.0.12/32 dev veth0
+
+# Ping it
+# ping 172.12.0.12

@@ -6,7 +6,7 @@ kubectl get services -n kube-system
 # It points to the cluster ip of the service
 
 # Get the pods in the kube-ns namespace and do a dns query to one of the coredns pods
-kubectl get services -n kube-system
+kubectl get pods -n kube-system
 
 # nslookup <full svc name> <dns resolver ip = coredns pod>
 nslookup kubernetes.default.svc.cluster.local 172.16.49.69

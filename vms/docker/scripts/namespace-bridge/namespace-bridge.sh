@@ -20,7 +20,7 @@ sudo ip netns exec ns1 ip link set veth1 up
 sudo ip netns exec ns2 ip addr add 172.12.0.12/24 dev veth2
 sudo ip netns exec ns2 ip link set veth2 up
 
-# Bringe ceth1 and ceth2 up
+# Bring ceth1 and ceth2 up
 sudo ip link set ceth1 up
 sudo ip link set ceth2 up
 
@@ -39,9 +39,9 @@ sudo ip link set br0 up
 sudo ip netns exec ns1 ip route add default via 172.12.0.1
 sudo ip netns exec ns2 ip route add default via 172.12.0.1
 
-# Make the bridge do source nat when communicating with the outside world
-sudo iptables -t nat -A POSTROUTING -s 172.12.0.0/24 -j MASQUERADE
-
 # Enable the bridge to forward connections
 sudo iptables -t filter -A FORWARD -i br0 -j ACCEPT
 sudo iptables -t filter -A FORWARD -o br0 -j ACCEPT
+
+# Make the bridge do source nat when communicating with the outside world
+sudo iptables -t nat -A POSTROUTING -s 172.12.0.0/24 -j MASQUERADE
